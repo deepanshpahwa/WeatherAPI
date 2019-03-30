@@ -8,9 +8,9 @@ import java.util.List;
 
 public class WeatherReader {
     public static List<WeatherBean> readFile(File csvFile) throws Exception {
-        MappingIterator<WeatherBean> personIterator = new CsvMapper().readerWithTypedSchemaFor(WeatherBean.class).readValues(csvFile);
+        MappingIterator<WeatherBean> weatherIterator = new CsvMapper().readerWithTypedSchemaFor(WeatherBean.class).readValues(csvFile);
 
-        return personIterator.readAll();
+        return weatherIterator.readAll();
     }
 
 }

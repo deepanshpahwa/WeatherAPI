@@ -1,13 +1,20 @@
 package HW2;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+import java.io.Serializable;
 
 @JsonPropertyOrder({ "DATE", "TMAX", "TMIN" })
 
-public class WeatherBean {
-
+public class WeatherBean implements Serializable {
+    @JsonProperty
     private String date;
+
+    @JsonProperty
     private String max_temperature;
+
+    @JsonProperty
     private String min_temperature;
 
     public String getDate() {
