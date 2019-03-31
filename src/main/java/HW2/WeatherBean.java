@@ -17,6 +17,12 @@ public class WeatherBean implements Serializable {
     @JsonProperty
     private String min_temperature;
 
+    public WeatherBean(String date, String max_temp, String min_temp) {
+        this.date = date;
+        this.max_temperature = max_temp;
+        this.min_temperature = min_temp;
+    }
+
     public String getDate() {
         return date;
     }
