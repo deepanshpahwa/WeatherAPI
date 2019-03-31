@@ -1,7 +1,5 @@
 package HW2;
 
-import HW2.WeatherService;
-import HW2.WeatherBean;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -9,7 +7,7 @@ import java.util.List;
 
 @RestController
 public class WeatherController {
-    WeatherService service;
+    WeatherService service = new WeatherService();
 
     @GetMapping("/historical")
     public List<String> getHistoricalWeatherData() throws Exception {
@@ -22,6 +20,7 @@ public class WeatherController {
         for (WeatherBean _weather : weather){
             listOfDates.add(_weather.getDate());
         }
+//        System.out.println(":::::::::::::::"+listOfDates.get(1));
 
         return listOfDates;
 
@@ -30,18 +29,18 @@ public class WeatherController {
 
 
     @GetMapping("/historical/{date}")
-    public String getHistoricalWeatherDataFromDate(@PathVariable("date") String date) throws Exception {
+    public WeatherBean getHistoricalWeatherDataFromDate(@PathVariable("date") String date) throws Exception {
 
         List<WeatherBean> weather;
         weather = getPojoDataFromService();
 
         for (WeatherBean _weather : weather){
             if (_weather.getDate().equals(date)){//todo check
-                return _weather.getMax_temperature();
+                return _weather;
             }
         }
 
-        return "Error";//TODO
+        return null;//TODO historical data not found
 
     }
 

@@ -9,11 +9,12 @@ public class WeatherService {
     List<WeatherBean> weather;
 
     public List<WeatherBean> loadPojos() throws Exception {
+        weather = new ArrayList<>();
 
         File testFile = new File("dailyweather.csv");
         weather = CSVtoPOJO.readFile(testFile);
 
-        if(weather!=null){
+        if(weather.size()!=0){
             pojosCreated = true;
         }
 
