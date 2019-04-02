@@ -45,12 +45,14 @@ public class WeatherController {
     }
 
     @PostMapping("/historical")
-    public void postWeatherData(@RequestBody String date, @RequestBody String max_temp, @RequestBody String min_temp){
+    public void postWeatherData(@RequestParam("date") String date, @RequestParam("max_temp") String max_temp, @RequestParam("min_temp") String min_temp) throws Exception {
+        getPojoDataFromService();
         service.addWeatherData(date,max_temp,min_temp);
     }
 
     @DeleteMapping("/historical/{date}")
-    public void deleteWeatherData(@PathVariable("date") String date){
+    public void deleteWeatherData(@PathVariable("date") String date) throws Exception {
+        getPojoDataFromService();
         service.deleteWeatherEntry(date);
     }
 

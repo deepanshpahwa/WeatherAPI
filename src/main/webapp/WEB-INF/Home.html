@@ -1,0 +1,145 @@
+<html>
+<head>
+    <script
+            src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.js"></script>
+    <script
+            src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-route.js"></script>
+    <title>AngularJS Rest</title>
+    <script type="text/javascript">
+        var app = angular.module("WeatherManagement", [ 'ngRoute' ]);
+        //Controller Part
+        app.controller("WeatherController", function($scope, $http) {
+            $scope.weatherobjects = [];
+            $scope.weatherForm = {
+                date : ""
+            };
+
+            $scope.submitDate = function() {
+                var url = 'http://localhost:8083/historical/'
+                    + $scope.weatherForm.date;
+                $http({
+                    method : 'GET',
+                    url : url,
+                }).then(function successCallback(response) {
+                    $scope.weatherobjects = response.data;
+                    console.log($scope.weatherobjects);
+                    _clearFormData()
+                }, function errorCallback(response) {
+                    console.log(response.statusText);
+                });
+            };
+
+            //Clear the form
+            function _clearFormData() {
+                $scope.weatherForm.date = "";
+            }
+            ;
+        });
+    </script>
+    <style>
+        .blue-button {
+            background: #25A6E1;
+            filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#25A6E1',
+            endColorstr='#188BC0', GradientType=0);
+            padding: 3px 5px;
+            color: #fff;
+            font-family: 'Helvetica Neue', sans-serif;
+            font-size: 12px;
+            border-radius: 2px;
+            -moz-border-radius: 2px;
+            -webkit-border-radius: 4px;
+            border: 1px solid #1A87B9
+        }
+
+        .red-button {
+            background: #CD5C5C;
+            padding: 3px 5px;
+            color: #fff;
+            font-family: 'Helvetica Neue', sans-serif;
+            font-size: 12px;
+            border-radius: 2px;
+            -moz-border-radius: 2px;
+            -webkit-border-radius: 4px;
+            border: 1px solid #CD5C5C
+        }
+
+        table {
+            font-family: "Helvetica Neue", Helvetica, sans-serif;
+            width: 50%;
+        }
+
+        caption {
+            text-align: left;
+            color: silver;
+            font-weight: bold;
+            text-transform: uppercase;
+            padding: 5px;
+        }
+
+        th {
+            background: SteelBlue;
+            color: white;
+        }
+
+        tbody tr:nth-child(even) {
+            background: WhiteSmoke;
+        }
+
+        tbody tr td:nth-child(2) {
+            text-align: center;
+        }
+
+        tfoot {
+            background: SeaGreen;
+            color: white;
+            text-align: right;
+        }
+
+        tfoot tr {
+            font-family: monospace;
+        }
+
+        td, th {
+            border: 1px solid gray;
+            width: 25%;
+            text-align: left;
+            padding: 5px 10px;
+        }
+    </style>
+    <head>
+<body ng-app="WeatherManagement" ng-controller="WeatherController">
+<h1>Forecast Report</h1>
+<form ng-submit="submitDate()">
+    <table>
+        <tr>
+            <th colspan="2">Enter Date in yyyyMMdd format</th>
+        </tr>
+        <tr>
+            <td>Date</td>
+            <td><input type="text" ng-model="weatherForm.date" /></td>
+        </tr>
+        <tr>
+            <td colspan="2"><input type="submit" value="Submit"
+                                   class="blue-button" /></td>
+        </tr>
+    </table>
+
+    <table>
+        <tr>
+
+            <th>Date</th>
+            <th>TMAX</th>
+            <th>TMIN</th>
+
+        </tr>
+
+        <tr data-ng-repeat="weatherObject in weatherobjects">
+            <td>{{ weatherObject.DATE }}</td>
+            <td>{{ weatherObject.TMAX }}</td>
+            <td>{{ weatherObject.TMIN }}</td>
+        </tr>
+
+    </table>
+</form>
+</body>
+</html>

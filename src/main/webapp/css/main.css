@@ -1,0 +1,47 @@
+body{
+	background-image: url("../image/w.jpg");
+}
+
+.weathername{
+	width: 500px;
+    height: 100px;
+    /*background-color: #669900;*/
+    margin-left: 33%;
+    margin-bottom:2%;
+
+
+}
+
+.weathertext{
+	padding-left: 25%;
+    padding-top: 2%;
+    font-style: oblique;
+    color:#ffffff;
+    font-size:50px;
+}
+
+.formpage{
+	width: 400px;
+    height: 300px;
+    background-color: #b3ffec;
+    display:inline-block;
+    float:left;
+    margin-left: 10%;
+}
+
+.formtable{
+	width: 600px;
+    height: 400px;
+    /*background-color: #d24dff;*/
+    display:inline-block;
+    float:left;
+    margin-left:9%;
+}
+
+.forminside{
+    width: 300px;
+    height: 150px;
+    margin-top: 20%;
+    margin-left: 10%;
+   /* background-color: #1affa3;*/
+}

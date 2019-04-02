@@ -1,0 +1,89 @@
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-route.js"></script>
+
+	<title> Weather</title>
+
+	<script type="text/javascript">
+        var app = angular.module("WeatherManagement", [ 'ngRoute' ]);
+        //Controller Part
+        app.controller("WeatherController", function($scope, $http) {
+            $scope.weatherobjects = [];
+            $scope.weatherForm = {
+                date : ""
+            };
+            $scope.submitDate = function() {
+                var url = 'http://localhost:8083/forecast/'
+                    + $scope.weatherForm.date;
+                $http({
+                    method : 'GET',
+                    url : url,
+                    crossDomain: true
+                }).then(function successCallback(response) {
+                    $scope.weatherobjects = response.data;
+                    console.log($scope.weatherobjects);
+                    _clearFormData()
+                }, function errorCallback(response) {
+                    console.log(response.statusText);
+                });
+            };
+            //Clear the form
+            function _clearFormData() {
+                $scope.weatherForm.date = "";
+            }
+            ;
+        });
+	</script>
+			<!-- Bootstrap library files-->
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-theme.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css">
+
+	<!-- Main CSS file for the project-->
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+<body ng-app="WeatherManagement" ng-controller="WeatherController">
+	<div class="weathername">
+		<div class="weathertext">
+			Weather App
+		</div>
+	</div>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-2  formpage">
+					<div class=" forminside">
+						<form ng-submit="submitDate()">
+							<label for='Date'> <h5><i>Enter the Forecast Date</i></h5> </label>
+							<div class = "form-group">
+								<input type="text" placeholder="yyyymmdd"  ng-model="weatherForm.date"   class="form-control" id="date">
+							</div>
+							<button type="submit" value="Submit" class="btn btn-info">Submit</button>
+						</form>
+					</div>
+				</div>
+				<div class="col-md-4  formtable">
+
+					  <table class="table table-dark">
+					    <thead>
+					      <tr>
+					        <th>DATE</th>
+					        <th>TMAX</th>
+					        <th>TMIN</th>
+					      </tr>
+					    </thead>
+					    <tbody>
+					      <tr data-ng-repeat="object in weatherobjects">
+								<td>{{ object.DATE }}</td>
+								<td>{{ object.TMAX }}</td>
+								<td>{{ object.TMIN }}</td>
+						 </tr>
+					    </tbody>
+					  </table>
+				</div>
+			</div>
+		</div>
+</body>
+</html>

@@ -37,11 +37,13 @@ public class WeatherService {
     }
 
     public void deleteWeatherEntry(String date) {
+        int index = -1;
         for (WeatherBean _weather: weather){
             if (_weather.getDate().equals(date)){
-                weather.remove(_weather);
+                index = weather.indexOf(_weather);
             }
         }
+        weather.remove(index);
     }
 
     public List<WeatherBean> getWeeksWeather(int index) {
