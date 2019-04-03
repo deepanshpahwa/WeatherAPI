@@ -1,5 +1,6 @@
 package HW2;
 
+import com.google.gson.Gson;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -9,20 +10,23 @@ import java.util.List;
 public class WeatherController {
     WeatherService service = new WeatherService();
 
+
     @GetMapping("/historical")
-    public List<String> getHistoricalWeatherData() throws Exception {
+    public List<WeatherDateBean> getHistoricalWeatherData() throws Exception {
 
         List<WeatherBean> weather;
         weather = getPojoDataFromService();
 
 
-        List<String> listOfDates = new ArrayList<>();
+        List<WeatherDateBean> listOfDates = new ArrayList<>();
         for (WeatherBean _weather : weather){
-            listOfDates.add(_weather.getDate());
+            listOfDates.add(new WeatherDateBean(_weather.getDate()));
         }
 //        System.out.println(":::::::::::::::"+listOfDates.get(1));
 
+        String json = new Gson().toJson(listOfDates);
         return listOfDates;
+
 
     }
 
@@ -30,6 +34,8 @@ public class WeatherController {
 
     @GetMapping("/historical/{date}")
     public WeatherBean getHistoricalWeatherDataFromDate(@PathVariable("date") String date) throws Exception {
+
+        checkDateLength(date);
 
         List<WeatherBean> weather;
         weather = getPojoDataFromService();
@@ -45,13 +51,17 @@ public class WeatherController {
     }
 
     @PostMapping("/historical")
-    public void postWeatherData(@RequestParam("date") String date, @RequestParam("max_temp") String max_temp, @RequestParam("min_temp") String min_temp) throws Exception {
+    public String postWeatherData(@RequestParam("date") String date, @RequestParam("max_temp") String max_temp, @RequestParam("min_temp") String min_temp) throws Exception {
         getPojoDataFromService();
         service.addWeatherData(date,max_temp,min_temp);
+
+        return  new Gson().toJson(new WeatherDateBean(date));
     }
 
     @DeleteMapping("/historical/{date}")
     public void deleteWeatherData(@PathVariable("date") String date) throws Exception {
+        checkDateLength(date);
+
         getPojoDataFromService();
         service.deleteWeatherEntry(date);
     }
@@ -59,31 +69,45 @@ public class WeatherController {
     @GetMapping("/forecast/{date}")
     public List<WeatherBean> getForecast(@PathVariable("date") String date) throws Exception {
 
+        checkDateLength(date);
+
+
         List<WeatherBean> weather;
         weather = getPojoDataFromService();
 
         for (WeatherBean _weather : weather){
             if (_weather.getDate().equals(date)){//todo check
-                return service.getWeeksWeather(weather.indexOf(_weather));
+                if (service.getWeeksWeather(weather.indexOf(_weather)) == null){
+                    throw new ResourceNotFoundException();
+                }
+                else{
+                    return service.getWeeksWeather(weather.indexOf(_weather));
+                }
             }
         }
 
         return null;//TODO add check on UI
     }
 
-
-    @GetMapping("/ponty")//todo delete
-    public String getPonty() throws Exception {
-
-        List<WeatherBean> weather;
-        weather = getPojoDataFromService();
-
-        for (WeatherBean _weather : weather){
-            return _weather.getMax_temperature();
+    private void checkDateLength(@PathVariable("date") String date) {
+        if (date.length()>8){
+            throw new ResourceNotFoundException();
         }
-
-        return "ponty";
     }
+
+
+//    @GetMapping("/ponty")//todo delete
+//    public String getPonty() throws Exception {
+//
+//        List<WeatherBean> weather;
+//        weather = getPojoDataFromService();
+//
+//        for (WeatherBean _weather : weather){
+//            return _weather.getMax_temperature();
+//        }
+//
+//        return "ponty";
+//    }
 
     private List<WeatherBean> getPojoDataFromService() throws Exception {
         List<WeatherBean> weather;

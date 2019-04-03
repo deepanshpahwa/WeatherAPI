@@ -24,8 +24,11 @@ repositories {
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-thymeleaf")
+
     compile("com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.7.0")
     compile 'com.opencsv:opencsv:4.5'
 
+    implementation 'com.google.code.gson:gson:2.8.5'
 
     testCompile('org.springframework.boot:spring-boot-starter-test')}
