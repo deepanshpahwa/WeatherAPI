@@ -1,10 +1,15 @@
 package HW2;
 
 import com.google.gson.Gson;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 
 @RestController
 public class WeatherController {
@@ -20,7 +25,7 @@ public class WeatherController {
 
         List<WeatherDateBean> listOfDates = new ArrayList<>();
         for (WeatherBean _weather : weather){
-            listOfDates.add(new WeatherDateBean(_weather.getDate()));
+            listOfDates.add(new WeatherDateBean(_weather.getDATE()));
         }
 //        System.out.println(":::::::::::::::"+listOfDates.get(1));
 
@@ -32,8 +37,8 @@ public class WeatherController {
 
 
 
-    @GetMapping("/historical/{date}")
-    public WeatherBean getHistoricalWeatherDataFromDate(@PathVariable("date") String date) throws Exception {
+    @GetMapping("/historical/{DATE}")
+    public WeatherBean getHistoricalWeatherDataFromDate(@PathVariable("DATE") String date) throws Exception {
 
         checkDateLength(date);
 
@@ -41,33 +46,47 @@ public class WeatherController {
         weather = getPojoDataFromService();
 
         for (WeatherBean _weather : weather){
-            if (_weather.getDate().equals(date)){//todo check
+            if (_weather.getDATE().equals(date)){//todo check
                 return _weather;
             }
         }
+        throw new ResourceNotFoundException();
 
-        return null;//TODO historical data not found
+//        return null;//TODO historical data not found
 
     }
 
-    @PostMapping("/historical")
-    public String postWeatherData(@RequestParam("date") String date, @RequestParam("max_temp") String max_temp, @RequestParam("min_temp") String min_temp) throws Exception {
+    @PostMapping(path = "/historical", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE )
+//    @RequestMapping(path = "/historical", method = POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public String postWeatherData(@RequestBody WeatherBean weatherBean) throws Exception {
+//    public String postWeatherData(@RequestBody WeatherBean weatherBean) throws Exception {
         getPojoDataFromService();
-        service.addWeatherData(date,max_temp,min_temp);
+//        service.addWeatherData(weatherBean.getDATE(),weatherBean.getMax_temperature(),weatherBean.getMin_temperature());
+        service.deleteWeatherEntry(weatherBean.getDATE());
+        service.addWeatherData(weatherBean.getDATE(), weatherBean.getMax_temperature(), weatherBean.getMin_temperature());
 
-        return  new Gson().toJson(new WeatherDateBean(date));
+//        return new ResponseEntity("Entry Created", HttpStatus.CREATED);//TODO this one
+
+//        return new TwoOhOne();
+
+//        throw new TwoOhOne();
+//        return Response
+
+        return  new Gson().toJson(new WeatherDateBean(weatherBean.getDATE()));
+//        return null;
     }
 
-    @DeleteMapping("/historical/{date}")
-    public void deleteWeatherData(@PathVariable("date") String date) throws Exception {
+    @DeleteMapping("/historical/{DATE}")
+    public void deleteWeatherData(@PathVariable("DATE") String date) throws Exception {
         checkDateLength(date);
 
         getPojoDataFromService();
         service.deleteWeatherEntry(date);
     }
 
-    @GetMapping("/forecast/{date}")
-    public List<WeatherBean> getForecast(@PathVariable("date") String date) throws Exception {
+    @GetMapping("/forecast/{DATE}")
+    public List<WeatherBean> getForecast(@PathVariable("DATE") String date) throws Exception {
 
         checkDateLength(date);
 
@@ -76,7 +95,7 @@ public class WeatherController {
         weather = getPojoDataFromService();
 
         for (WeatherBean _weather : weather){
-            if (_weather.getDate().equals(date)){//todo check
+            if (_weather.getDATE().equals(date)){//todo check
                 if (service.getWeeksWeather(weather.indexOf(_weather)) == null){
                     throw new ResourceNotFoundException();
                 }
@@ -89,7 +108,7 @@ public class WeatherController {
         return null;//TODO add check on UI
     }
 
-    private void checkDateLength(@PathVariable("date") String date) {
+    private void checkDateLength(@PathVariable("DATE") String date) {
         if (date.length()>8){
             throw new ResourceNotFoundException();
         }

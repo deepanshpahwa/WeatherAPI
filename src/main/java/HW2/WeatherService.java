@@ -31,7 +31,7 @@ public class WeatherService {
         return pojosCreated;
     }
 
-    public void addWeatherData(String date, String max_temp, String min_temp) {
+    public void addWeatherData(String date, Double max_temp, Double min_temp) {
         WeatherBean weatherBean = new WeatherBean(date, max_temp, min_temp);
         weather.add(weatherBean);
     }
@@ -39,11 +39,13 @@ public class WeatherService {
     public void deleteWeatherEntry(String date) {
         int index = -1;
         for (WeatherBean _weather: weather){
-            if (_weather.getDate().equals(date)){
+            if (_weather.getDATE().equals(date)){
                 index = weather.indexOf(_weather);
             }
         }
-        weather.remove(index);
+        if (index!=-1) {
+            weather.remove(index);
+        }
     }
 
     public List<WeatherBean> getWeeksWeather(int index) {

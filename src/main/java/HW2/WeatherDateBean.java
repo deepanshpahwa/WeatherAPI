@@ -1,17 +1,19 @@
 package HW2;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class WeatherDateBean {
     public WeatherDateBean(String date) {
-        this.date = date;
+        this.DATE = date;
+    }
+    @JsonProperty("DATE")
+    public String getDATE() {
+        return DATE;
     }
 
-    public String getDate() {
-        return date;
+    public void setDATE(String DATE) {
+        this.DATE = DATE;
     }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    String date;
+    @JsonProperty
+    String DATE;
 }
