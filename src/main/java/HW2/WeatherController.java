@@ -16,7 +16,7 @@ public class WeatherController {
     WeatherService service = new WeatherService();
 
 
-    @GetMapping("/historical")
+    @GetMapping("weather/historical")
     public List<WeatherDateBean> getHistoricalWeatherData() throws Exception {
 
         List<WeatherBean> weather;
@@ -37,7 +37,7 @@ public class WeatherController {
 
 
 
-    @GetMapping("/historical/{DATE}")
+    @GetMapping("weather/historical/{DATE}")
     public WeatherBean getHistoricalWeatherDataFromDate(@PathVariable("DATE") String date) throws Exception {
 
         checkDateLength(date);
@@ -56,7 +56,7 @@ public class WeatherController {
 
     }
 
-    @PostMapping(path = "/historical", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE )
+    @PostMapping(path = "weather/historical", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE )
 //    @RequestMapping(path = "/historical", method = POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public String postWeatherData(@RequestBody WeatherBean weatherBean) throws Exception {
@@ -77,7 +77,7 @@ public class WeatherController {
 //        return null;
     }
 
-    @DeleteMapping("/historical/{DATE}")
+    @DeleteMapping("weather/historical/{DATE}")
     public void deleteWeatherData(@PathVariable("DATE") String date) throws Exception {
         checkDateLength(date);
 
@@ -85,7 +85,7 @@ public class WeatherController {
         service.deleteWeatherEntry(date);
     }
 
-    @GetMapping("/forecast/{DATE}")
+    @GetMapping("weather/forecast/{DATE}")
     public List<WeatherBean> getForecast(@PathVariable("DATE") String date) throws Exception {
 
         checkDateLength(date);

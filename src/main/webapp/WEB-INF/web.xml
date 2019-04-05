@@ -23,7 +23,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Jersey REST Service</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/weather/</url-pattern>
     </servlet-mapping>
     <!-- <error-page>
         <error-code>404</error-code>

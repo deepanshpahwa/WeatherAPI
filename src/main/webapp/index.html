@@ -14,7 +14,7 @@
                 date : ""
             };
             $scope.submitDate = function() {
-                var url = window.location.href.slice(0,-12)+'forecast/'
+                var url = window.location.href+'weather/forecast/'
                     + $scope.weatherForm.date;
                 $http({
                     method : 'GET',
